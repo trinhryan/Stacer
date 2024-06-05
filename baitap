@@ -1,0 +1,156 @@
+using System;
+using System.Collections.Generic;
+
+namespace HoaDonApp
+{
+    class HangHoa
+    {
+        public string MaHang { get; set; }
+        public string TenHang { get; set; }
+        public double DonGia { get; set; }
+
+        public HangHoa() { }
+
+        public HangHoa(string maHang, string tenHang, double donGia)
+        {
+            MaHang = maHang;
+            TenHang = tenHang;
+            DonGia = donGia;
+        }
+
+        public void Nhap()
+        {
+            Console.Write("Moi nhap ma hang: ");
+            MaHang = Console.ReadLine();
+            Console.Write("Moi nhap ten hang: ");
+            TenHang = Console.ReadLine();
+            Console.Write("Moi nhap don gia: ");
+            DonGia = double.Parse(Console.ReadLine());
+        }
+
+        public void Xuat()
+        {
+            Console.WriteLine("Ma hang: {0}", MaHang);
+            Console.WriteLine("Ten hang: {0}", TenHang);
+            Console.WriteLine("Don gia: {0}", DonGia);
+        }
+    }
+
+    class KhachHang
+    {
+        public string MaKhach { get; set; }
+        public string TenKhach { get; set; }
+        public string DiaChi { get; set; }
+
+        public KhachHang() { }
+
+        public KhachHang(string maKhach, string tenKhach, string diaChi)
+        {
+            MaKhach = maKhach;
+            TenKhach = tenKhach;
+            DiaChi = diaChi;
+        }
+
+        public void Nhap()
+        {
+            Console.Write("Moi nhap ma khach hang: ");
+            MaKhach = Console.ReadLine();
+            Console.Write("Moi nhap ten khach hang: ");
+            TenKhach = Console.ReadLine();
+            Console.Write("Moi nhap dia chi: ");
+            DiaChi = Console.ReadLine();
+        }
+
+        public void Xuat()
+        {
+            Console.WriteLine("Ma khach hang: {0}", MaKhach);
+            Console.WriteLine("Ten khach hang: {0}", TenKhach);
+            Console.WriteLine("Dia chi: {0}", DiaChi);
+        }
+    }
+
+    class HoaDon
+    {
+        public KhachHang KhachHang { get; set; }
+        private List<HangHoa> dsHangHoa = new List<HangHoa>();
+
+        public HoaDon(KhachHang khachHang)
+        {
+            KhachHang = khachHang;
+        }
+
+        public void ThemHangHoa(HangHoa hh)
+        {
+            dsHangHoa.Add(hh);
+        }
+
+        public void XoaHangHoa(string maHang)
+        {
+            dsHangHoa.RemoveAll(hh => hh.MaHang == maHang);
+        }
+
+        public HangHoa TimHangHoaGiaCaoNhat()
+        {
+            if (dsHangHoa.Count == 0)
+            {
+                return null;
+            }
+
+            HangHoa hangHoaGiaCaoNhat = dsHangHoa[0];
+
+            foreach (HangHoa hh in dsHangHoa)
+            {
+                if (hh.DonGia > hangHoaGiaCaoNhat.DonGia)
+                {
+                    hangHoaGiaCaoNhat = hh;
+                }
+            }
+
+            return hangHoaGiaCaoNhat;
+        }
+
+        public void InHoaDon()
+        {
+            Console.WriteLine("Hoa Don Cua Khach Hang:");
+            KhachHang.Xuat();
+            Console.WriteLine("Danh Sach Hang Hoa:");
+            foreach (HangHoa hh in dsHangHoa)
+            {
+                hh.Xuat();
+            }
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            KhachHang kh = new KhachHang();
+            kh.Nhap();
+
+            HoaDon hd = new HoaDon(kh);
+
+            for (int i = 0; i < 3; i++)
+            {
+                HangHoa hh = new HangHoa();
+                hh.Nhap();
+                hd.ThemHangHoa(hh);
+            }
+
+            HangHoa hangHoaGiaCaoNhat = hd.TimHangHoaGiaCaoNhat();
+            if (hangHoaGiaCaoNhat != null)
+            {
+                Console.WriteLine("Hang hoa co gia cao nhat la:");
+                hangHoaGiaCaoNhat.Xuat();
+            }
+            else
+            {
+                Console.WriteLine("Khong co hang hoa trong danh sach.");
+            }
+
+            hd.InHoaDon();
+
+            Console.ReadLine();
+        }
+    }
+}
